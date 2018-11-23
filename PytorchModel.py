@@ -23,6 +23,9 @@ class PytorchModel(QThread):
         #frame, rgb, width, height
         self.images = torch.empty(1, 3, 84, 84)
 
+    def __del__(self):
+        self.wait()
+
     def open_model(self, path, details):
         self.path = path
         checkpoint = torch.load(path)

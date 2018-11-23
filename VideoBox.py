@@ -40,9 +40,13 @@ class VideoBox(QWidget):
 class Thread(QThread):
     changePixmap = pyqtSignal(QImage)
 
+    def __del__(self):
+        self.wait()
+
     def run(self):
         # 0 fro the first device
-        cap = cv2.VideoCapture('VID_20180923_140835.mp4')
+        #cap = cv2.VideoCapture('VID_20180923_140835.mp4')
+        cap = cv2.VideoCapture(0)
         while True:
             ret, frame = cap.read()
             if ret:
@@ -51,3 +55,4 @@ class Thread(QThread):
                 p = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
                 self.changePixmap.emit(p)
                 cv2.waitKey(150) #to 10 fps
+                self.msleep(150)
