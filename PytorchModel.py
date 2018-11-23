@@ -9,9 +9,11 @@ import multiprocessing as mp
 
 class PytorchModel(QThread):
 
-    def __init__(self, chartSignal, parent=None):
+    def __init__(self, chartSignal, modelDescriptionSignal, parent=None):
         QThread.__init__(self, parent)
+        self.setStackSize(200000000)
         self.chartSignal = chartSignal
+        self.modelDescriptionSignal = modelDescriptionSignal
         self.open_flag = False
         self.model = MyNetwork(5)
         self.transform = Compose([
@@ -26,11 +28,11 @@ class PytorchModel(QThread):
     def __del__(self):
         self.wait()
 
-    def open_model(self, path, details):
+    def open_model(self, path):
         self.path = path
         checkpoint = torch.load(path)
         self.model.load_state_dict(checkpoint['state_dict'])
-        details.setText(self.model.__str__())
+        self.modelDescriptionSignal.emit(self.model.__str__())
         self.model.eval()
         self.open_flag = True
 

@@ -44,6 +44,7 @@ class Thread(QThread):
         self.wait()
 
     def run(self):
+        self.setStackSize(200000000)
         # 0 fro the first device
         #cap = cv2.VideoCapture('VID_20180923_140835.mp4')
         cap = cv2.VideoCapture(0)

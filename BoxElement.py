@@ -54,7 +54,7 @@ class BoxElement(QWidget):
         self.filePathBox.setText(file_name.__str__())
         self.filePathBox.displayText()
         if file_name != '':
-            self.fileSignal.emit(file_name, self.details)
+            self.fileSignal.emit(file_name)
 
     def open_file_label(self):
         file_name, _ = QFileDialog.getOpenFileName(self, "Choose a label file", "", "CSV files (*.csv)")
@@ -62,6 +62,9 @@ class BoxElement(QWidget):
         self.labelPathBox.displayText()
         if file_name != '':
             self.fileLabelSignal.emit(file_name)
+
+    def fillModelDescription(self, str):
+        self.details.setText(str)
 
     def path(self):
         return self.filePathBox.text()

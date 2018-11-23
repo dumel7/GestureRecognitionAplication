@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+import threading
+
 from PyQt5.QtCore import Qt, pyqtSlot, pyqtSignal
 from PyQt5.QtWidgets import QWidget, QApplication, QHBoxLayout, QVBoxLayout, QTextEdit
 from PyQt5.QtGui import QIcon, QImage
@@ -13,10 +15,12 @@ from VideoBox import VideoBox
 import numpy as np
 
 class Application(QWidget):
-    fileSignal = pyqtSignal(str, QTextEdit)
+    fileSignal = pyqtSignal(str)
     imageSignal = pyqtSignal(QImage)
     chartSignal = pyqtSignal(np.ndarray)
     fileLabelSignal = pyqtSignal(str)
+    modelDescriptionSignal = pyqtSignal(str)
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.interface()
@@ -30,7 +34,7 @@ class Application(QWidget):
         self.chartBox = ChartBox()
 
         """set pytorch model"""
-        self.pytorchModel = PytorchModel(self.chartSignal)
+        self.pytorchModel = PytorchModel(self.chartSignal, self.modelDescriptionSignal)
         self.pytorchModel.start()
 
         """set connections"""
@@ -38,6 +42,7 @@ class Application(QWidget):
         self.imageSignal.connect(self.pytorchModel.add_to_queue)
         self.chartSignal.connect(self.chartBox.fill_values)
         self.fileLabelSignal.connect(self.chartBox.make_char_labels)
+        self.modelDescriptionSignal.connect(self.boxElement.fillModelDescription)
         """set the layout"""
         layout = QHBoxLayout()
         layout.addWidget(self.boxElement, alignment=Qt.AlignLeft)
@@ -49,7 +54,7 @@ class Application(QWidget):
 
 if __name__ == '__main__':
     import sys
-
+    sys.setrecursionlimit(100000)
     app = QApplication(sys.argv)
     window = Application()
     sys.exit(app.exec())
