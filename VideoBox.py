@@ -1,6 +1,7 @@
 from PyQt5.QtCore import QThread, pyqtSignal, Qt, pyqtSlot
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtWidgets import QWidget, QLabel
+import datetime
 import cv2
 
 
@@ -13,7 +14,7 @@ class VideoBox(QWidget):
         self.width = 480
         self.height = 810
         self.image_rate = 0
-        self.image_max_rate = 8
+        self.image_max_rate = 3
         self.title = 'Web camera video'
         self.init_ui()
 
@@ -34,7 +35,10 @@ class VideoBox(QWidget):
         self.image_rate += 1
         if self.image_rate == self.image_max_rate:
             self.image_rate = 0
-            self.imageSignal.emit(image)
+            image = image.scaled(160,120,Qt.KeepAspectRatio)
+            self.imageSignal.emit(image, datetime.datetime.now())
+
+        #self.update()
 
 
 class Thread(QThread):
@@ -46,8 +50,8 @@ class Thread(QThread):
     def run(self):
         self.setStackSize(200000000)
         # 0 fro the first device
-        #cap = cv2.VideoCapture('VID_20180923_140835.mp4')
-        cap = cv2.VideoCapture(0)
+        cap = cv2.VideoCapture('My video - 26-11-2018_16-21-27.mp4')
+        #cap = cv2.VideoCapture(0)
         while True:
             ret, frame = cap.read()
             if ret:
@@ -55,5 +59,5 @@ class Thread(QThread):
                 convertToQtFormat = QImage(rgbImage.data, rgbImage.shape[1], rgbImage.shape[0], QImage.Format_RGB888)
                 p = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
                 self.changePixmap.emit(p)
-                cv2.waitKey(150) #to 10 fps
-                self.msleep(150)
+                cv2.waitKey(50) #to 30 fps
+                #self.msleep(150)

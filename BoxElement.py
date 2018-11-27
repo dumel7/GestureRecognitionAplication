@@ -63,8 +63,8 @@ class BoxElement(QWidget):
         if file_name != '':
             self.fileLabelSignal.emit(file_name)
 
-    def fillModelDescription(self, str):
-        self.details.setText(str)
+    def fillModelDescription(self, details):
+        self.details.setText(details)
 
     def path(self):
         return self.filePathBox.text()

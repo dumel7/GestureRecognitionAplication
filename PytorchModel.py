@@ -1,6 +1,6 @@
 import queue
 import torch
-from PyQt5.QtCore import QThread
+from PyQt5.QtCore import QThread, pyqtSignal
 from torchvision.transforms import Compose, CenterCrop, ToTensor, Normalize
 from PIL import Image
 from model import MyNetwork
@@ -8,9 +8,11 @@ import numpy as np
 import multiprocessing as mp
 
 class PytorchModel(QThread):
-
-    def __init__(self, chartSignal, modelDescriptionSignal, parent=None):
+    msg = pyqtSignal()
+    def __init__(self, chartSignal, modelDescriptionSignal, cond, mutex, parent=None):
         QThread.__init__(self, parent)
+        self.cond = cond
+        self.mutex = mutex
         self.setStackSize(200000000)
         self.chartSignal = chartSignal
         self.modelDescriptionSignal = modelDescriptionSignal
@@ -36,8 +38,10 @@ class PytorchModel(QThread):
         self.model.eval()
         self.open_flag = True
 
-    def add_to_queue(self, q_image):
+    def add_to_queue(self, q_image, datetime):
+
         if self.open_flag:
+            self.datetime = datetime
             bytes = q_image.bits().asstring(q_image.byteCount())
             pil_img = Image.frombuffer("RGB", (q_image.width(), q_image.height()), bytes, 'raw', "RGB", 0, 1)
             tensor_img = self.transform(pil_img)
@@ -57,7 +61,7 @@ class PytorchModel(QThread):
         test_val = self.images.view(1,3,18,84,84)
         output = self.model(test_val)
         output = output.detach().numpy()
-        self.chartSignal.emit(output[0])
+        self.chartSignal.emit(output[0], self.datetime)
 
 
 

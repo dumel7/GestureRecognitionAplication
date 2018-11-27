@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 import threading
 
-from PyQt5.QtCore import Qt, pyqtSlot, pyqtSignal
+from PyQt5.QtCore import Qt, pyqtSlot, pyqtSignal, QMutex, QWaitCondition, QThread
 from PyQt5.QtWidgets import QWidget, QApplication, QHBoxLayout, QVBoxLayout, QTextEdit
 from PyQt5.QtGui import QIcon, QImage
 from PyQt5.QtWidgets import QLabel, QGridLayout
@@ -12,12 +12,14 @@ from BoxElement import BoxElement
 from ChartBox import ChartBox
 from PytorchModel import PytorchModel
 from VideoBox import VideoBox
+import datetime
 import numpy as np
+
 
 class Application(QWidget):
     fileSignal = pyqtSignal(str)
-    imageSignal = pyqtSignal(QImage)
-    chartSignal = pyqtSignal(np.ndarray)
+    imageSignal = pyqtSignal(QImage, datetime.datetime)
+    chartSignal = pyqtSignal(np.ndarray, datetime.datetime)
     fileLabelSignal = pyqtSignal(str)
     modelDescriptionSignal = pyqtSignal(str)
 
@@ -34,8 +36,17 @@ class Application(QWidget):
         self.chartBox = ChartBox()
 
         """set pytorch model"""
-        self.pytorchModel = PytorchModel(self.chartSignal, self.modelDescriptionSignal)
-        self.pytorchModel.start()
+
+        self.mutex = QMutex()
+        self.cond = QWaitCondition()
+        self.mThread = QThread()
+
+
+        self.pytorchModel = PytorchModel(self.chartSignal, self.modelDescriptionSignal, self.cond, self.mutex)
+        self.pytorchModel.moveToThread(self.mThread)
+        self.mThread.finished.connect(self.pytorchModel.deleteLater)
+        self.imageSignal.connect(self.pytorchModel.add_to_queue)
+        self.mThread.start()
 
         """set connections"""
         self.fileSignal.connect(self.pytorchModel.open_model)
