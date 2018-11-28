@@ -11,9 +11,9 @@ class BoxElement(QWidget):
         self.width = 480
         self.height = 810
         self.filePathBox = QLineEdit()
-        self.openButton = QPushButton('open')
+        self.openButton = QPushButton('open model')
         self.labelPathBox = QLineEdit()
-        self.openLabelButton = QPushButton('open')
+        self.openLabelButton = QPushButton('open labels')
         self.details = QTextEdit()
         self.detailsName = QLabel()
         self.init_ui()

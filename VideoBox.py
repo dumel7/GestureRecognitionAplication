@@ -25,25 +25,25 @@ class VideoBox(QWidget):
 
         self.label = QLabel(self.title, self)
         self.label.resize(640, 480)
-        th = Thread(self)
-        th.changePixmap.connect(self.setImage)
-        th.start()
+        self.th = Thread(self)
+        self.th.changePixmap.connect(self.setImage)
+        self.th.start()
 
     @pyqtSlot(QImage)
     def setImage(self, image):
         self.label.setPixmap(QPixmap.fromImage(image))
-        self.image_rate += 1
-        if self.image_rate == self.image_max_rate:
-            self.image_rate = 0
-            image = image.scaled(160,120,Qt.KeepAspectRatio)
-            self.imageSignal.emit(image, datetime.datetime.now())
+        # self.image_rate += 1
+        # if self.image_rate == self.image_max_rate:
+        #     self.image_rate = 0
+        image = image.scaled(160,120,Qt.KeepAspectRatio)
+        self.imageSignal.emit(image, datetime.datetime.now())
 
         #self.update()
 
 
 class Thread(QThread):
     changePixmap = pyqtSignal(QImage)
-
+    waitTime = 150
     def __del__(self):
         self.wait()
 
@@ -59,5 +59,8 @@ class Thread(QThread):
                 convertToQtFormat = QImage(rgbImage.data, rgbImage.shape[1], rgbImage.shape[0], QImage.Format_RGB888)
                 p = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
                 self.changePixmap.emit(p)
-                cv2.waitKey(50) #to 30 fps
+                cv2.waitKey(self.waitTime) #to 30 fps
                 #self.msleep(150)
+
+    def updateWaitTime(self, i):
+        self.waitTime += 10*i

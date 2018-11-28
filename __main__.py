@@ -54,6 +54,7 @@ class Application(QWidget):
         self.chartSignal.connect(self.chartBox.fill_values)
         self.fileLabelSignal.connect(self.chartBox.make_char_labels)
         self.modelDescriptionSignal.connect(self.boxElement.fillModelDescription)
+        self.chartBox.waitSignal.connect(self.videoBox.th.updateWaitTime)
         """set the layout"""
         layout = QHBoxLayout()
         layout.addWidget(self.boxElement, alignment=Qt.AlignLeft)

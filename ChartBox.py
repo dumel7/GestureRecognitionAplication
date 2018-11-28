@@ -1,10 +1,13 @@
-from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtCore import pyqtSlot, pyqtSignal
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QFormLayout, QApplication, QTextEdit, QHBoxLayout, QVBoxLayout
 import csv
 import numpy as np
 import datetime
 
 class ChartBox(QWidget):
+    MAX_DELAY = 10
+    MIN_DELAY = 1
+    waitSignal = pyqtSignal(int)
     def __init__(self, parent=None):
         super().__init__(parent)
         self.left = 10
@@ -30,7 +33,12 @@ class ChartBox(QWidget):
                 self.listQLineEdit[i].setText(value.__str__())
                 self.listQLineEdit[i].show()
             indx = np.argmax(results)
-            self.datetime.setText((datetime.datetime.now() - time).__str__())
+            delay = datetime.datetime.now() - time
+            if delay.seconds > self.MAX_DELAY:
+                self.waitSignal.emit(-1)
+            if delay.seconds < self.MIN_DELAY:
+                self.waitSignal.emit(1)
+            self.datetime.setText(delay.__str__())
             if indx != self.currentGest:
                 self.currentGest = indx
                 self.details.setText(self.details.toPlainText() + '\n' + self.listQLabel[self.currentGest].text())
