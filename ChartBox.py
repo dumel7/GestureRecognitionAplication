@@ -29,9 +29,7 @@ class ChartBox(QWidget):
     def fill_values(self, results, time):
         if self.fillValuesFlag:
             for i, value in enumerate(results):
-                self.listQLineEdit[i].clear()
                 self.listQLineEdit[i].setText(value.__str__())
-                self.listQLineEdit[i].show()
             indx = np.argmax(results)
             delay = datetime.datetime.now() - time
             if delay.seconds > self.MAX_DELAY:
@@ -41,8 +39,7 @@ class ChartBox(QWidget):
             self.datetime.setText(delay.__str__())
             if indx != self.currentGest:
                 self.currentGest = indx
-                self.details.setText(self.details.toPlainText() + '\n' + self.listQLabel[self.currentGest].text())
-
+                self.details.setText(self.details.toPlainText() + '\n' + self.listQLabel[self.currentGest].text() + "\t:\t" + results[indx].__str__())
             #QApplication.processEvents()
 
 

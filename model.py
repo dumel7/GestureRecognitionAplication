@@ -9,7 +9,8 @@ class CNN(nn.Module):
         self.list.append(self._make_conv_layer(3, 64, (1, 2, 2), (1, 2, 2)))
         self.list.append(self._make_conv_layer(64, 128, (2, 2, 2), (2, 2, 2)))
         self.list.append(self._make_conv_layer(128, 256, (2, 2, 2), (2, 2, 2)))
-        self.list.append(self._make_conv_layer(256, 256, (2, 2, 2), (2, 2, 2)))
+        self.list.append(self._make_conv_layer(256, 512, (2, 2, 2), (2, 2, 2)))
+        self.list.append(self._make_conv_layer(512, 512, (1, 1, 1), (1, 1, 1)))
         #self.list.append(self._make_conv_layer(in_c=1024, out_c=512, pool_size=(1, 1, 2), stride=(1, 1, 1)))
         """after poooling there is a change of the dimention of the output data, according to MaxPool3d
             Out = (in - kernel_size + 2*padding)/ stride + 1
@@ -46,7 +47,7 @@ class FC(nn.Module):
     def __init__(self, num_classes):
         super(FC, self).__init__()
         self.list = nn.ModuleList()
-        self.list.append(nn.Linear(in_features=12800, out_features=512, bias=True))
+        self.list.append(nn.Linear(in_features=25600, out_features=512, bias=True))
         self.fc_layer2_act = nn.ELU()
         self.fc_layer3 = nn.Linear(in_features=512, out_features=num_classes, bias=True)
 

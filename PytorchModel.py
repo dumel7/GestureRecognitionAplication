@@ -9,6 +9,7 @@ import multiprocessing as mp
 
 class PytorchModel(QThread):
     msg = pyqtSignal()
+    num_classes = 5
     def __init__(self, chartSignal, modelDescriptionSignal, cond, mutex, parent=None):
         QThread.__init__(self, parent)
         self.cond = cond
@@ -17,7 +18,7 @@ class PytorchModel(QThread):
         self.chartSignal = chartSignal
         self.modelDescriptionSignal = modelDescriptionSignal
         self.open_flag = False
-        self.model = MyNetwork(5)
+        self.model = MyNetwork(self.num_classes)
         self.transform = Compose([
             CenterCrop(84),
             ToTensor(),
