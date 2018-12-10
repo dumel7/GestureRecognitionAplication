@@ -1,8 +1,10 @@
-from PyQt5.QtCore import pyqtSlot, pyqtSignal
-from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QFormLayout, QApplication, QTextEdit, QHBoxLayout, QVBoxLayout
 import csv
-import numpy as np
 import datetime
+
+import numpy as np
+from PyQt5.QtCore import pyqtSlot, pyqtSignal
+from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QFormLayout, QTextEdit, QVBoxLayout
+
 
 class ChartBox(QWidget):
     MAX_DELAY = 10
@@ -55,7 +57,7 @@ class ChartBox(QWidget):
                 self.listQLabel.append(q_label)
                 self.listQLineEdit.append(q_line_edit)
         self.currentGest = -1
-        self.datetimeLabel = QLabel('Opoznienie')
+        self.datetimeLabel = QLabel('Delay')
         self.datetime = QLineEdit()
         layout.addRow(self.datetimeLabel, self.datetime)
 

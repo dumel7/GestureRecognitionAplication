@@ -1,6 +1,6 @@
-from PyQt5.QtCore import pyqtSlot, QLine, Qt, QRect, pyqtSignal
-from PyQt5.QtWidgets import QWidget, QFileDialog, QPushButton, QLineEdit, QVBoxLayout, QHBoxLayout, QFormLayout, \
-    QBoxLayout, QLabel, QTextEdit
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QWidget, QFileDialog, QPushButton, QLineEdit, QVBoxLayout, QFormLayout, \
+    QLabel, QTextEdit
 
 
 class BoxElement(QWidget):

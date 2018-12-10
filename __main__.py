@@ -1,19 +1,16 @@
 from __future__ import unicode_literals
 
-import threading
+import datetime
 
-from PyQt5.QtCore import Qt, pyqtSlot, pyqtSignal, QMutex, QWaitCondition, QThread
-from PyQt5.QtWidgets import QWidget, QApplication, QHBoxLayout, QVBoxLayout, QTextEdit
-from PyQt5.QtGui import QIcon, QImage
-from PyQt5.QtWidgets import QLabel, QGridLayout
-
+import numpy as np
+from PyQt5.QtCore import Qt, pyqtSignal, QMutex, QWaitCondition, QThread
+from PyQt5.QtGui import QImage
+from PyQt5.QtWidgets import QWidget, QApplication, QHBoxLayout
 
 from BoxElement import BoxElement
 from ChartBox import ChartBox
 from PytorchModel import PytorchModel
 from VideoBox import VideoBox
-import datetime
-import numpy as np
 
 
 class Application(QWidget):

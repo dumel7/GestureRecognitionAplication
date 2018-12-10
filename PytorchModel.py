@@ -1,11 +1,10 @@
-import queue
 import torch
+from PIL import Image
 from PyQt5.QtCore import QThread, pyqtSignal
 from torchvision.transforms import Compose, CenterCrop, ToTensor, Normalize
-from PIL import Image
+
 from model import MyNetwork
-import numpy as np
-import multiprocessing as mp
+
 
 class PytorchModel(QThread):
     msg = pyqtSignal()

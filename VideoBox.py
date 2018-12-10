@@ -1,8 +1,9 @@
+import datetime
+
+import cv2
 from PyQt5.QtCore import QThread, pyqtSignal, Qt, pyqtSlot
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtWidgets import QWidget, QLabel
-import datetime
-import cv2
 
 
 class VideoBox(QWidget):

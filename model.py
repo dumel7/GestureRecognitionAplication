@@ -92,6 +92,6 @@ class MyNetwork(nn.Module):
 
 if __name__ == "__main__":
     input_tensor = torch.autograd.Variable(torch.rand(5, 3, 18, 84, 84))
-    model = MyNetwork(10, show=True)  # ConvColumn(27).cuda()
+    model = MyNetwork(5, show=True)  # ConvColumn(27).cuda()
     output = model(input_tensor)  # model(input_tensor.cuda())
     print(model)
